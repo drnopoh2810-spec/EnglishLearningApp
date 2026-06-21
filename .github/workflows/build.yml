@@ -1,0 +1,96 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore EnglishLearningApp.csproj
+
+      - name: Build (Release)
+        run: dotnet build EnglishLearningApp.csproj --configuration Release --no-restore
+
+      - name: Publish self-contained
+        run: |
+          dotnet publish EnglishLearningApp.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=false `
+            --output ./publish/win-x64
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnglishLearningApp-win-x64
+          path: ./publish/win-x64/
+          retention-days: 30
+
+      - name: Install WiX Toolset
+        run: dotnet tool install --global wix
+
+      - name: Add WiX UI extension
+        run: wix extension add --global WixToolset.UI.wixext
+
+      - name: Copy published files for installer
+        run: |
+          New-Item -ItemType Directory -Force -Path bin\Release\net8.0-windows
+          Copy-Item -Path publish\win-x64\* -Destination bin\Release\net8.0-windows\ -Recurse -Force
+
+      - name: Build MSI Installer
+        run: wix build Installer\EnglishLearningApp.wxs -o EnglishLearningApp-Setup.msi
+        continue-on-error: true
+
+      - name: Upload MSI Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnglishLearningApp-Setup-MSI
+          path: EnglishLearningApp-Setup.msi
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Create Release (on main push)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "English Learning App v1.0.${{ github.run_number }}"
+          body: |
+            ## English Learning App - Release v1.0.${{ github.run_number }}
+
+            ### What's included
+            - **Portable Version** (`EnglishLearningApp-win-x64.zip`) — Extract and run directly
+            - **Installer** (`EnglishLearningApp-Setup.msi`) — Windows installer (recommended)
+
+            ### Features
+            - Smart sentence-based English learning with Arabic translation
+            - Spaced repetition algorithm (SM-2)
+            - YouGlish pronunciation integration
+            - Import/Export (CSV, Excel, JSON)
+            - Dashboard with learning statistics
+            - Dark/Light Material Design theme
+          files: |
+            EnglishLearningApp-Setup.msi
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
