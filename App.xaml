@@ -1,0 +1,32 @@
+<Application x:Class="EnglishLearningApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:EnglishLearningApp.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             Startup="OnStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Difficulty Values for ComboBox -->
+            <x:Array x:Key="DifficultyValues" Type="sys:String">
+                <sys:String>Beginner</sys:String>
+                <sys:String>Intermediate</sys:String>
+                <sys:String>Advanced</sys:String>
+                <sys:String>Expert</sys:String>
+            </x:Array>
+
+            <!-- Converters -->
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:MasteryToBrushConverter x:Key="MasteryToBrushConverter" />
+            <converters:RatingToBrushConverter x:Key="RatingToBrushConverter" />
+            <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConv" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
