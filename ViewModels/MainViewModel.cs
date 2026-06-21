@@ -109,11 +109,11 @@ namespace EnglishLearningApp.ViewModels
             
             if (IsDarkTheme)
             {
-                themeObj.SetBaseTheme(MaterialDesignThemes.Wpf.BaseTheme.Dark);
+                themeObj.SetBaseTheme(MaterialDesignThemes.Wpf.Theme.Dark);
             }
             else
             {
-                themeObj.SetBaseTheme(MaterialDesignThemes.Wpf.BaseTheme.Light);
+                themeObj.SetBaseTheme(MaterialDesignThemes.Wpf.Theme.Light);
             }
             
             paletteHelper.SetTheme(themeObj);
