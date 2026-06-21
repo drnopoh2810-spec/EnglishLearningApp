@@ -1,5 +1,6 @@
 using EnglishLearningApp.Helpers;
 using EnglishLearningApp.Services;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
