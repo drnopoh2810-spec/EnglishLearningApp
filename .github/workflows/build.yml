@@ -37,37 +37,17 @@ jobs:
             -p:PublishSingleFile=false `
             --output ./publish/win-x64
 
-      - name: Upload build artifacts
+      - name: Create portable ZIP
+        run: Compress-Archive -Path ./publish/win-x64/* -DestinationPath EnglishLearningApp-win-x64-portable.zip
+
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: EnglishLearningApp-win-x64
           path: ./publish/win-x64/
           retention-days: 30
 
-      - name: Install WiX Toolset
-        run: dotnet tool install --global wix
-
-      - name: Add WiX UI extension
-        run: wix extension add --global WixToolset.UI.wixext
-
-      - name: Copy published files for installer
-        run: |
-          New-Item -ItemType Directory -Force -Path bin\Release\net8.0-windows
-          Copy-Item -Path publish\win-x64\* -Destination bin\Release\net8.0-windows\ -Recurse -Force
-
-      - name: Build MSI Installer
-        run: wix build Installer\EnglishLearningApp.wxs -o EnglishLearningApp-Setup.msi
-        continue-on-error: true
-
-      - name: Upload MSI Installer
-        uses: actions/upload-artifact@v4
-        with:
-          name: EnglishLearningApp-Setup-MSI
-          path: EnglishLearningApp-Setup.msi
-          if-no-files-found: warn
-          retention-days: 30
-
-      - name: Create Release (on main push)
+      - name: Create GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
@@ -76,9 +56,12 @@ jobs:
           body: |
             ## English Learning App - Release v1.0.${{ github.run_number }}
 
-            ### What's included
-            - **Portable Version** (`EnglishLearningApp-win-x64.zip`) — Extract and run directly
-            - **Installer** (`EnglishLearningApp-Setup.msi`) — Windows installer (recommended)
+            ### Download
+            - **EnglishLearningApp-win-x64-portable.zip** — Extract the ZIP and run `EnglishLearningApp.exe` directly. No installation required.
+
+            ### System Requirements
+            - Windows 10/11 (x64)
+            - No .NET runtime needed (self-contained)
 
             ### Features
             - Smart sentence-based English learning with Arabic translation
@@ -88,7 +71,7 @@ jobs:
             - Dashboard with learning statistics
             - Dark/Light Material Design theme
           files: |
-            EnglishLearningApp-Setup.msi
+            EnglishLearningApp-win-x64-portable.zip
           draft: false
           prerelease: false
           generate_release_notes: false
