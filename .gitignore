@@ -1,0 +1,43 @@
+# Build outputs
+bin/
+obj/
+publish/
+*.msi
+
+# User-specific files
+*.user
+*.suo
+.vs/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# Settings (local user data)
+settings.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+
+# Replit internal
+.replit
+replit.nix
+.local/
+.upm/
+.cache/
