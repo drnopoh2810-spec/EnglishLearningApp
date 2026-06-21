@@ -4,6 +4,7 @@ using EnglishLearningApp.Services;
 using EnglishLearningApp.ViewModels;
 using EnglishLearningApp.Views;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
 namespace EnglishLearningApp
