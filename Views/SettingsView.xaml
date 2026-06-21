@@ -1,0 +1,188 @@
+<UserControl x:Class="EnglishLearningApp.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="900">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv" />
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="600" HorizontalAlignment="Left">
+                <!-- Header -->
+                <TextBlock Text="Settings"
+                          FontSize="28"
+                          FontWeight="Bold"
+                          Margin="0,0,0,24" />
+
+                <!-- Status Message -->
+                <materialDesign:Card Padding="16"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8"
+                                    Background="{DynamicResource MaterialDesignCardBackground}"
+                                    Visibility="{Binding StatusMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                    <TextBlock Text="{Binding StatusMessage}"
+                              TextWrapping="Wrap" />
+                </materialDesign:Card>
+
+                <!-- Appearance Section -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Palette" 
+                                                    Width="24" 
+                                                    Height="24"
+                                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Appearance"
+                                      FontSize="18"
+                                      FontWeight="Bold" />
+                        </StackPanel>
+
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                     IsChecked="{Binding IsDarkTheme}"
+                                     Content="Dark Theme"
+                                     Margin="0,0,0,8" />
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Review Settings Section -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Cards" 
+                                                    Width="24" 
+                                                    Height="24"
+                                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Review Settings"
+                                      FontSize="18"
+                                      FontWeight="Bold" />
+                        </StackPanel>
+
+                        <Slider Style="{StaticResource MaterialDesignDiscreteSlider}"
+                               Minimum="5"
+                               Maximum="100"
+                               Value="{Binding DailyReviewTarget}"
+                               TickFrequency="5"
+                               Margin="0,0,0,4" />
+                        <TextBlock Text="{Binding DailyReviewTarget, StringFormat='Daily Review Target: {0} sentences'}"
+                                  Margin="0,0,0,16" />
+
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                     IsChecked="{Binding AutoTranslate}"
+                                     Content="Auto-translate on import"
+                                     Margin="0,0,0,8" />
+
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                     IsChecked="{Binding AutoPlayAudio}"
+                                     Content="Auto-play audio during review"
+                                     Margin="0,0,0,8" />
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Database Section -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Database" 
+                                                    Width="24" 
+                                                    Height="24"
+                                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Database"
+                                      FontSize="18"
+                                      FontWeight="Bold" />
+                        </StackPanel>
+
+                        <TextBlock Text="Database Path:"
+                                  FontWeight="SemiBold"
+                                  Margin="0,0,0,4" />
+                        <TextBlock Text="{Binding DatabasePath}"
+                                  FontSize="12"
+                                  Opacity="0.6"
+                                  TextWrapping="Wrap"
+                                  Margin="0,0,0,16" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                   Command="{Binding BackupDatabaseCommand}"
+                                   Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Backup" Margin="0,0,8,0" />
+                                    <TextBlock Text="Backup Database" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                   Command="{Binding CompactDatabaseCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="ZipBox" Margin="0,0,8,0" />
+                                    <TextBlock Text="Compact Database" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Danger Zone -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8"
+                                    BorderBrush="Red"
+                                    BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Alert" 
+                                                    Width="24" 
+                                                    Height="24"
+                                                    Foreground="Red"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Danger Zone"
+                                      FontSize="18"
+                                      FontWeight="Bold"
+                                      Foreground="Red" />
+                        </StackPanel>
+
+                        <TextBlock Text="Reset all learning progress including mastery scores and review history. This action cannot be undone."
+                                  Opacity="0.7"
+                                  Margin="0,0,0,16"
+                                  TextWrapping="Wrap" />
+
+                        <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                               Command="{Binding ResetProgressCommand}"
+                               Foreground="Red"
+                               BorderBrush="Red">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Alert" Margin="0,0,8,0" />
+                                <TextBlock Text="Reset All Progress" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Save Button -->
+                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                       Command="{Binding SaveSettingsCommand}"
+                       Background="{DynamicResource PrimaryHueMidBrush}"
+                       HorizontalAlignment="Left"
+                       Padding="32,8">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSave" Margin="0,0,8,0" />
+                        <TextBlock Text="Save Settings" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
