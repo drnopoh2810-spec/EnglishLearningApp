@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Name="English Learning App"
+           Language="1033"
+           Version="1.0.0.0"
+           Manufacturer="English Learning App"
+           UpgradeCode="12345678-1234-1234-1234-123456789012">
+
+    <Package InstallerVersion="200"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Platform="x64" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="English Learning App" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="EnglishLearningApp" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="English Learning App" />
+      </Directory>
+      <Directory Id="DesktopFolder" />
+    </Directory>
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="ProductComponent">
+        <File Source="..\bin\Release\net8.0-windows\EnglishLearningApp.exe" KeyPath="yes" />
+        <File Source="..\bin\Release\net8.0-windows\EnglishLearningApp.dll" />
+        <File Source="..\bin\Release\net8.0-windows\EnglishLearningApp.runtimeconfig.json" />
+        <File Source="..\bin\Release\net8.0-windows\EnglishLearningApp.deps.json" />
+        <!-- Entity Framework -->
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.dll" />
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.Relational.dll" />
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.EntityFrameworkCore.Sqlite.dll" />
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.Data.Sqlite.dll" />
+        <File Source="..\bin\Release\net8.0-windows\SQLitePCLRaw.batteries_v2.dll" />
+        <File Source="..\bin\Release\net8.0-windows\SQLitePCLRaw.core.dll" />
+        <File Source="..\bin\Release\net8.0-windows\SQLitePCLRaw.provider.e_sqlite3.dll" />
+        <File Source="..\bin\Release\net8.0-windows\runtimes\win-x64\native\e_sqlite3.dll" />
+        <!-- Material Design -->
+        <File Source="..\bin\Release\net8.0-windows\MaterialDesignColors.dll" />
+        <File Source="..\bin\Release\net8.0-windows\MaterialDesignThemes.Wpf.dll" />
+        <!-- EPPlus -->
+        <File Source="..\bin\Release\net8.0-windows\EPPlus.dll" />
+        <File Source="..\bin\Release\net8.0-windows\Microsoft.IO.RecyclableMemoryStream.dll" />
+        <!-- Newtonsoft -->
+        <File Source="..\bin\Release\net8.0-windows\Newtonsoft.Json.dll" />
+        <!-- CsvHelper -->
+        <File Source="..\bin\Release\net8.0-windows\CsvHelper.dll" />
+        <!-- Other dependencies -->
+        <File Source="..\bin\Release\net8.0-windows\System.Speech.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ShortcutComponents" Directory="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                 Name="English Learning App"
+                 Description="Smart sentence-based English learning platform"
+                 Target="[INSTALLFOLDER]EnglishLearningApp.exe"
+                 WorkingDirectory="INSTALLFOLDER"
+                 Icon="app_icon.ico" />
+        <RemoveFolder Id="CleanUpShortCut" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\EnglishLearningApp" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Icon Id="app_icon.ico" SourceFile="..\Resources\app_icon.ico" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+  </Product>
+</Wix>
