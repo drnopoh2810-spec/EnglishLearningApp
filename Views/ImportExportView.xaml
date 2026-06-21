@@ -1,0 +1,166 @@
+<UserControl x:Class="EnglishLearningApp.Views.ImportExportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="900">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConv" />
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="600" HorizontalAlignment="Left">
+                <!-- Header -->
+                <TextBlock Text="Import &amp; Export"
+                          FontSize="28"
+                          FontWeight="Bold"
+                          Margin="0,0,0,24" />
+
+                <!-- Status Message -->
+                <materialDesign:Card Padding="16"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8"
+                                    Background="{DynamicResource MaterialDesignCardBackground}"
+                                    Visibility="{Binding StatusMessage, Converter={StaticResource StringToVisibilityConverter}}">
+                    <TextBlock Text="{Binding StatusMessage}"
+                              Foreground="{Binding IsStatusError, Converter={StaticResource BoolToColorConverter}}"
+                              TextWrapping="Wrap" />
+                </materialDesign:Card>
+
+                <!-- Default Group Selection -->
+                <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                         materialDesign:HintAssist.Hint="Default Import Group"
+                         ItemsSource="{Binding Groups}"
+                         DisplayMemberPath="GroupName"
+                         SelectedValuePath="Id"
+                         SelectedValue="{Binding SelectedGroupId}"
+                         Margin="0,0,0,24" />
+
+                <!-- Export Section -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Export" 
+                                                    Width="28" 
+                                                    Height="28"
+                                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Export Sentences"
+                                      FontSize="20"
+                                      FontWeight="Bold" />
+                        </StackPanel>
+
+                        <TextBlock Text="Export all your sentences to a file for backup or sharing."
+                                  Opacity="0.7"
+                                  Margin="0,0,0,16"
+                                  TextWrapping="Wrap" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ExportCsvCommand}"
+                                   Background="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,0,8,0"
+                                   IsEnabled="{Binding IsExporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="FileDelimited" Margin="0,0,8,0" />
+                                    <TextBlock Text="Export CSV" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ExportExcelCommand}"
+                                   Background="Green"
+                                   Margin="0,0,8,0"
+                                   IsEnabled="{Binding IsExporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="MicrosoftExcel" Margin="0,0,8,0" />
+                                    <TextBlock Text="Export Excel" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ExportJsonCommand}"
+                                   Background="Orange"
+                                   IsEnabled="{Binding IsExporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="CodeJson" Margin="0,0,8,0" />
+                                    <TextBlock Text="Export JSON" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Import Section -->
+                <materialDesign:Card Padding="24"
+                                    Margin="0,0,0,16"
+                                    UniformCornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <materialDesign:PackIcon Kind="Import" 
+                                                    Width="28" 
+                                                    Height="28"
+                                                    Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                                    Margin="0,0,12,0" />
+                            <TextBlock Text="Import Sentences"
+                                      FontSize="20"
+                                      FontWeight="Bold" />
+                        </StackPanel>
+
+                        <TextBlock Text="Import sentences from a CSV, Excel, or JSON file. Arabic translations will be automatically generated if not provided."
+                                  Opacity="0.7"
+                                  Margin="0,0,0,16"
+                                  TextWrapping="Wrap" />
+
+                        <TextBlock Text="Expected CSV format: EnglishSentence, ArabicTranslation, DifficultyLevel, Notes, Groups"
+                                  FontSize="12"
+                                  Opacity="0.5"
+                                  FontStyle="Italic"
+                                  Margin="0,0,0,16" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ImportCsvCommand}"
+                                   Background="{DynamicResource SecondaryHueMidBrush}"
+                                   Foreground="{DynamicResource SecondaryHueMidForegroundBrush}"
+                                   Margin="0,0,8,0"
+                                   IsEnabled="{Binding IsImporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="FileDelimited" Margin="0,0,8,0" />
+                                    <TextBlock Text="Import CSV" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ImportExcelCommand}"
+                                   Background="Green"
+                                   Margin="0,0,8,0"
+                                   IsEnabled="{Binding IsImporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="MicrosoftExcel" Margin="0,0,8,0" />
+                                    <TextBlock Text="Import Excel" />
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                   Command="{Binding ImportJsonCommand}"
+                                   Background="Orange"
+                                   IsEnabled="{Binding IsImporting, Converter={StaticResource InverseBooleanConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="CodeJson" Margin="0,0,8,0" />
+                                    <TextBlock Text="Import JSON" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <ProgressBar IsIndeterminate="True"
+                                    Visibility="{Binding IsImporting, Converter={StaticResource BoolToVisibilityConv}}"
+                                    Margin="0,16,0,0" />
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
